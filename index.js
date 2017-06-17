@@ -114,8 +114,6 @@ const init = () => {
     .then(console.log)
 }
 
-init()
-
 module.exports = {
   init,
 }
