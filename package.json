@@ -4,6 +4,10 @@
   "description": ":cd: Package and update your existent AWS Lambda functions",
   "main": "index.js",
   "author": "Pagar.me Pagamentos S.A. <@pagarme>",
+  "bin": {
+    "lambda-compact-deploy": "./bin/index.js",
+    "lcd": "./bin/index.js"
+  },
   "scripts": {
     "lint": "eslint index.js",
     "test": "nodemon index.js"
@@ -17,6 +21,7 @@
     "archiver": "^1.3.0",
     "aws-sdk": "^2.72.0",
     "bluebird": "^3.5.0",
+    "commander": "^2.9.0",
     "globby": "^6.1.0",
     "js-yaml": "^3.8.4",
     "nodemon": "^1.11.0",

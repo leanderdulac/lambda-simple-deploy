@@ -5,19 +5,20 @@ const yaml = require('js-yaml')
 const globby = require('globby')
 const archiver = require('archiver')
 const { Lambda, S3 } = require('aws-sdk')
-const { always, map } = require('ramda')
+const { __, always, defaultTo, map, mergeDeepWith } = require('ramda')
 
 const readFile = Promise.promisify(fs.readFile)
 const parseYaml = yaml.load
 
 const log = (str) => () => console.log(`[INFO] ${str}`)
 
-const parseConfigurationFile = () => {
+const parseConfigurationFile = (options) => {
   const CONFIGURATION_FILE = path.resolve('./lcd.yml')
 
   return Promise.resolve(CONFIGURATION_FILE)
     .then(readFile)
     .then(parseYaml)
+    .then(mergeDeepWith(defaultTo, __, options))
 }
 
 const deploy = (config) => {
@@ -107,14 +108,12 @@ const deploy = (config) => {
     .then(() => [config])
 }
 
-const init = () => {
-  Promise.resolve()
+const init = (options) => {
+  Promise.resolve(options)
     .then(parseConfigurationFile)
     .then(deploy)
     .then(console.log)
 }
-
-init()
 
 module.exports = {
   init,
