@@ -1,0 +1,29 @@
+{
+  "name": "lambda-compact-deploy",
+  "version": "0.1.0",
+  "description": ":cd: Package and update your existent AWS Lambda functions",
+  "main": "index.js",
+  "author": "Pagar.me Pagamentos S.A. <@pagarme>",
+  "devDependencies": {
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0"
+  },
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pagarme/lambda-compact-deploy.git"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "deploy",
+    "serverless"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pagarme/lambda-compact-deploy/issues"
+  },
+  "homepage": "https://github.com/pagarme/lambda-compact-deploy#readme"
+}
