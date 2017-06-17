@@ -4,6 +4,7 @@ const Promise = require('bluebird')
 const yaml = require('js-yaml')
 const globby = require('globby')
 const archiver = require('archiver')
+const { S3 } = require('aws-sdk')
 const { map } = require('ramda')
 
 const readFile = Promise.promisify(fs.readFile)
@@ -24,15 +25,13 @@ const deploy = (config) => {
   const packageSourceFiles = () => {
     const sourceFilePatterns = [
       'dist/**',
-      'node_modules/**',
     ]
 
     const files = globby.sync(sourceFilePatterns)
-
     const zip = archiver.create('zip')
 
-    const destinationFilePath = path.resolve(`./${config.project.name}.zip`)
-    const output = fs.createWriteStream(destinationFilePath)
+    const artifactFilePath = path.resolve(`./.lcd/${Date.now()}-${config.project.name}.zip`)
+    const output = fs.createWriteStream(artifactFilePath)
 
     const writeFileOnZip = (file) => {
       const fullPath = path.resolve(file)
@@ -51,9 +50,27 @@ const deploy = (config) => {
       map(writeFileOnZip, files)
       zip.finalize()
     })
+
+    return new Promise((resolve, reject) => {
+      output.on('close', () => resolve(artifactFilePath))
+      zip.on('error', reject)
+    })
   }
 
-  const uploadZipToBucket = () => {}
+  const uploadZipToBucket = (artifactFilePath) => {
+    const s3 = new S3()
+    const s3Key = Date.now()
+    const fileName = artifactFilePath.split(path.sep).pop()
+
+    const params = {
+      Bucket: config.project.bucket,
+      Key: `${s3Key}/${fileName}`,
+      Body: fs.createReadStream(artifactFilePath),
+      ContentType: 'application/zip',
+    }
+
+    return s3.putObject(params).promise()
+  }
 
   const updateFunctionsCode = () => {}
 
@@ -72,6 +89,8 @@ const init = () => {
     .then(deploy)
     .then(console.log)
 }
+
+init()
 
 module.exports = {
   init,
