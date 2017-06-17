@@ -4,11 +4,13 @@ const Promise = require('bluebird')
 const yaml = require('js-yaml')
 const globby = require('globby')
 const archiver = require('archiver')
-const { S3 } = require('aws-sdk')
-const { map } = require('ramda')
+const { Lambda, S3 } = require('aws-sdk')
+const { always, map } = require('ramda')
 
 const readFile = Promise.promisify(fs.readFile)
 const parseYaml = yaml.load
+
+const log = (str) => () => console.log(`[INFO] ${str}`)
 
 const parseConfigurationFile = () => {
   const CONFIGURATION_FILE = path.resolve('./lcd.yml')
@@ -21,6 +23,8 @@ const parseConfigurationFile = () => {
 const deploy = (config) => {
   const composeFunctionName = functionName =>
     `${config.project.name}-${config.project.stage}-${functionName}`
+
+  const functions = map(composeFunctionName, config.functions)
 
   const packageSourceFiles = () => {
     const sourceFilePatterns = [
@@ -59,26 +63,46 @@ const deploy = (config) => {
 
   const uploadZipToBucket = (artifactFilePath) => {
     const s3 = new S3()
-    const s3Key = Date.now()
     const fileName = artifactFilePath.split(path.sep).pop()
+    const s3Key = `${Date.now()}/${fileName}`
 
     const params = {
       Bucket: config.project.bucket,
-      Key: `${s3Key}/${fileName}`,
+      Key: s3Key,
       Body: fs.createReadStream(artifactFilePath),
       ContentType: 'application/zip',
     }
 
     return s3.putObject(params).promise()
+      .then(always(s3Key))
   }
 
-  const updateFunctionsCode = () => {}
+  const updateFunctionsCode = (s3Key) => {
+    const lambda = new Lambda({
+      region: config.project.region,
+    })
 
-  const functions = map(composeFunctionName, config.functions)
+    const updateFunctionCode = (functionName) => {
+      const params = {
+        FunctionName: functionName,
+        Publish: true,
+        S3Bucket: config.project.bucket,
+        S3Key: s3Key,
+      }
+
+      return lambda.updateFunctionCode(params).promise()
+    }
+
+    return Promise.map(functions, updateFunctionCode)
+  }
+
 
   return Promise.resolve(functions)
+    .tap(log('Packaging source files'))
     .then(packageSourceFiles)
+    .tap(log('Uploading zip file to S3 bucket'))
     .then(uploadZipToBucket)
+    .tap(log('Updating functions code'))
     .then(updateFunctionsCode)
     .then(() => [config])
 }
