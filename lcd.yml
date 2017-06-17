@@ -1,0 +1,9 @@
+project:
+  name: lcd-example
+  region: us-east-1
+  stage: sandbox
+  bucket: lcd-deploy-bucket
+
+functions:
+  - hello-world
+  - fizz-buzz

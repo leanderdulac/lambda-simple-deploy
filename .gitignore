@@ -1,3 +1,7 @@
+# Project
+*.zip
+dist
+
 # Logs
 logs
 *.log
