@@ -13,8 +13,6 @@ const parseYaml = yaml.load
 
 const log = str => () => console.log(`[INFO] ${str}`)
 
-const x: string = 123
-
 const parseConfigurationFile = (options) => {
   const CONFIGURATION_FILE = path.resolve('./lsd.yml')
 
@@ -45,7 +43,7 @@ const deploy = (config) => {
       const fullPath = path.resolve(file)
       const stats = fs.statSync(fullPath)
 
-      if (!stats.isDirectory(fullPath)) {
+      if (!stats.isDirectory()) {
         zip.append(fs.readFileSync(fullPath), {
           name: file,
           mode: stats.mode,
@@ -111,7 +109,7 @@ const deploy = (config) => {
     .then(() => [config])
 }
 
-export const init = (options) => {
+export const init = (options: any) => {
   Promise.resolve(options)
     .then(parseConfigurationFile)
     .then(deploy)
