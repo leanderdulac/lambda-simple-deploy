@@ -1,16 +1,19 @@
-const path = require('path')
-const fs = require('fs')
-const Promise = require('bluebird')
-const yaml = require('js-yaml')
-const globby = require('globby')
-const archiver = require('archiver')
-const { Lambda, S3 } = require('aws-sdk')
-const { __, always, defaultTo, map, mergeDeepWith } = require('ramda')
+// @flow
+import path from 'path'
+import fs from 'fs'
+import Promise from 'bluebird'
+import yaml from 'js-yaml'
+import globby from 'globby'
+import archiver from 'archiver'
+import { Lambda, S3 } from 'aws-sdk'
+import { __, always, defaultTo, map, mergeDeepWith } from 'ramda'
 
 const readFile = Promise.promisify(fs.readFile)
 const parseYaml = yaml.load
 
 const log = str => () => console.log(`[INFO] ${str}`)
+
+const x: string = 123
 
 const parseConfigurationFile = (options) => {
   const CONFIGURATION_FILE = path.resolve('./lsd.yml')
@@ -108,14 +111,10 @@ const deploy = (config) => {
     .then(() => [config])
 }
 
-const init = (options) => {
+export const init = (options) => {
   Promise.resolve(options)
     .then(parseConfigurationFile)
     .then(deploy)
     .then(console.log)
-}
-
-module.exports = {
-  init,
 }
 

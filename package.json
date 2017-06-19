@@ -5,17 +5,25 @@
   "main": "index.js",
   "author": "Pagar.me Pagamentos S.A. <@pagarme>",
   "bin": {
-    "lambda-simple-deploy": "./bin/index.js",
-    "lsd": "./bin/index.js"
+    "lambda-simple-deploy": "./dist/index.js",
+    "lsd": "./dist/index.js"
   },
   "scripts": {
+    "build": "babel src --out-dir dist",
     "lint": "eslint index.js",
-    "test": "nodemon index.js"
+    "prepublish": "npm run build",
+    "test": "nodemon index.js",
+    "type-check": "flow check"
   },
   "devDependencies": {
+    "babel": "6.23.0",
+    "babel-cli": "6.24.1",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-flow": "6.23.0",
     "eslint": "^4.0.0",
     "eslint-config-airbnb-base": "^11.2.0",
-    "eslint-plugin-import": "^2.3.0"
+    "eslint-plugin-import": "^2.3.0",
+    "flow-bin": "0.48.0"
   },
   "dependencies": {
     "archiver": "^1.3.0",

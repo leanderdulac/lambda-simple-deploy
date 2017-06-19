@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+// @flow
 
-const program = require('commander')
-const { init } = require('../index.js')
+import program from 'commander'
+import { init } from './index'
 
 program
   .version('0.1.0')
