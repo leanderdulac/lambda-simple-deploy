@@ -10,10 +10,10 @@ const { __, always, defaultTo, map, mergeDeepWith } = require('ramda')
 const readFile = Promise.promisify(fs.readFile)
 const parseYaml = yaml.load
 
-const log = (str) => () => console.log(`[INFO] ${str}`)
+const log = str => () => console.log(`[INFO] ${str}`)
 
 const parseConfigurationFile = (options) => {
-  const CONFIGURATION_FILE = path.resolve('./lcd.yml')
+  const CONFIGURATION_FILE = path.resolve('./lsd.yml')
 
   return Promise.resolve(CONFIGURATION_FILE)
     .then(readFile)
@@ -35,7 +35,7 @@ const deploy = (config) => {
     const files = globby.sync(sourceFilePatterns)
     const zip = archiver.create('zip')
 
-    const artifactFilePath = path.resolve(`./.lcd/${Date.now()}-${config.project.name}.zip`)
+    const artifactFilePath = path.resolve(`./.lsd/${Date.now()}-${config.project.name}.zip`)
     const output = fs.createWriteStream(artifactFilePath)
 
     const writeFileOnZip = (file) => {
