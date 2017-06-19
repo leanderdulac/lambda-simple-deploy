@@ -1,21 +1,36 @@
 {
-  "name": "lambda-compact-deploy",
+  "name": "lambda-simple-deploy",
   "version": "0.1.0",
   "description": ":cd: Package and update your existent AWS Lambda functions",
   "main": "index.js",
   "author": "Pagar.me Pagamentos S.A. <@pagarme>",
-  "devDependencies": {
-    "eslint": "^4.0.0",
-    "eslint-config-airbnb-base": "^11.2.0",
-    "eslint-plugin-import": "^2.3.0"
+  "bin": {
+    "lambda-simple-deploy": "./bin/index.js",
+    "lsd": "./bin/index.js"
   },
   "scripts": {
     "lint": "eslint index.js",
     "test": "nodemon index.js"
   },
+  "devDependencies": {
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.3.0"
+  },
+  "dependencies": {
+    "archiver": "^1.3.0",
+    "aws-sdk": "^2.72.0",
+    "bluebird": "^3.5.0",
+    "commander": "^2.9.0",
+    "globby": "^6.1.0",
+    "js-yaml": "^3.8.4",
+    "nodemon": "^1.11.0",
+    "ramda": "^0.24.1",
+    "typescript": "^2.3.4"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pagarme/lambda-compact-deploy.git"
+    "url": "git+https://github.com/pagarme/lambda-simple-deploy.git"
   },
   "keywords": [
     "aws",
@@ -25,7 +40,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pagarme/lambda-compact-deploy/issues"
+    "url": "https://github.com/pagarme/lambda-simple-deploy/issues"
   },
-  "homepage": "https://github.com/pagarme/lambda-compact-deploy#readme"
+  "homepage": "https://github.com/pagarme/lambda-simple-deploy#readme"
 }
