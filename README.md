@@ -1,3 +1,5 @@
+# This project was deprecated in favor of [pagarme/deployer](https://github.com/pagarme/deployer)
+
 # lambda-simple-deploy
 
 :cd: Package and update your existent AWS Lambda functions
